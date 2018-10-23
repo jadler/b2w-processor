@@ -1,9 +1,17 @@
 package br.com.jadler.processor;
 
 import com.google.auto.service.AutoService;
+import freemarker.core.ParseException;
+import freemarker.template.Configuration;
+import freemarker.template.MalformedTemplateNameException;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -27,45 +35,51 @@ import javax.tools.JavaFileObject;
 @AutoService(Processor.class)
 public class RepositoryProcessor extends AbstractProcessor {
 
+    private Configuration cfg = null;
+    private Template t = null;
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
 
+        Map<String, Object> map = new HashMap();
         annotations.forEach(a -> {
             env.getElementsAnnotatedWith(a).stream().forEach(e -> {
-                write(e.toString());
+
+                String[] input = e.toString().split("\\.");
+
+                if (input.length > 1) {
+                    String[] output = Arrays.copyOfRange(input, 0, input.length - 1);
+                    output[output.length - 1] = "repository";
+                    map.put("package", String.join(".", output));
+                }
+
+                map.put("import", e.toString());
+                map.put("inClass", input[input.length - 1]);
+                map.put("outClass", input[input.length - 1] + "Repository");
+
+                try {
+                    write(map);
+                } catch (IOException | TemplateException ex) {
+                    System.out.println(ex.getMessage());
+                }
             });
         });
 
         return true;
     }
 
-    @SuppressWarnings("ConvertToTryWithResources")
-    private void write(String name) {
+    private void write(Map<String, Object> map) throws MalformedTemplateNameException, ParseException, IOException, TemplateException {
+        cfg = new Configuration(Configuration.getVersion());
+        cfg.setClassForTemplateLoading(this.getClass(), "/");
 
-        int lastIndexOf = name.lastIndexOf(".");
-        String basename = name.substring(lastIndexOf + 1);
-        String pkgname = name.replace("." + basename, "");
-        pkgname = pkgname.substring(0, pkgname.lastIndexOf("."));
-        pkgname = pkgname + ".repository";
+        t = cfg.getTemplate("/repository.ftl");
 
-        try {
+        String output = String.format("%s.%s", map.get("package"), map.get("outClass"));
+        JavaFileObject file = processingEnv.getFiler().createSourceFile(output);
 
-
-            StringBuilder builder = new StringBuilder();
-            builder.append(String.format("package %s;%n%n", pkgname))
-                    .append(String.format("import %s;%n", name))
-                    .append(String.format("import org.springframework.data.mongodb.repository.MongoRepository;%n%n"))
-                    .append(String.format("public interface %sRepository extends MongoRepository<%s, String> {}%n", basename, basename));
-
-            String source = String.format("%s.%sRepository", pkgname, basename);
-            JavaFileObject file = processingEnv.getFiler().createSourceFile(source);
-            Writer writer = new PrintWriter(file.openWriter());
-            writer.write(builder.toString());
+        try (Writer writer = new PrintWriter(file.openWriter())) {
+            t.process(map, writer);
             writer.flush();
-            writer.close();
-
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
         }
     }
 }
