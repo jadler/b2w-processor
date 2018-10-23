@@ -29,8 +29,8 @@ import javax.tools.JavaFileObject;
  * Cria uma classe Controller para cada classe com a anotação
  * {@literal @}ControllerProperty no mesmo pacote
  *
- * @since 1.0
- * @version 1.0
+ * @since 1.1
+ * @version 1.1
  * @author <a href="mailto:jaguar.adler@gmail.com">Jaguaraquem A. Reinaldo</a>
  */
 @SupportedAnnotationTypes({
