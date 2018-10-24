@@ -34,7 +34,7 @@ import javax.tools.JavaFileObject;
  * @author <a href="mailto:jaguar.adler@gmail.com">Jaguaraquem A. Reinaldo</a>
  */
 @SupportedAnnotationTypes({
-    "br.com.jadler.annotation.ControllerProperty",
+    "br.com.jadler.annotation.GenerateController",
     "br.com.jadler.annotation.MappedProperty"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_8)

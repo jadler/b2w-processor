@@ -30,7 +30,7 @@ import javax.tools.JavaFileObject;
  * @version 1.2
  * @author <a href="mailto:jaguar.adler@gmail.com">Jaguaraquem A. Reinaldo</a>
  */
-@SupportedAnnotationTypes("br.com.jadler.annotation.RepositoryProperty")
+@SupportedAnnotationTypes("br.com.jadler.annotation.GenerateRepository")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class RepositoryProcessor extends AbstractProcessor {
