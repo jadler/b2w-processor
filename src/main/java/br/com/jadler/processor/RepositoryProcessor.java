@@ -27,7 +27,7 @@ import javax.tools.JavaFileObject;
  * {@literal @}RepositoryProperty no mesmo pacote
  *
  * @since 1.0
- * @version 1.1
+ * @version 1.2
  * @author <a href="mailto:jaguar.adler@gmail.com">Jaguaraquem A. Reinaldo</a>
  */
 @SupportedAnnotationTypes("br.com.jadler.annotation.RepositoryProperty")
