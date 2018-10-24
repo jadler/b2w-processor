@@ -30,7 +30,7 @@ import javax.tools.JavaFileObject;
  * {@literal @}ControllerProperty no mesmo pacote
  *
  * @since 1.1
- * @version 1.1
+ * @version 1.2
  * @author <a href="mailto:jaguar.adler@gmail.com">Jaguaraquem A. Reinaldo</a>
  */
 @SupportedAnnotationTypes({
@@ -49,7 +49,7 @@ public class ControllerProcessor extends AbstractProcessor {
 
         Map<String, Map<String, Object>> mmap = new HashMap();
 
-        annotations.forEach(a -> {
+        annotations.stream().forEach(a -> {
 
             env.getElementsAnnotatedWith(a).stream()
                     .filter(e -> e.getKind().equals(CLASS))
@@ -77,13 +77,14 @@ public class ControllerProcessor extends AbstractProcessor {
                         map.put("elements", m.getValue());
                         mmap.put(m.getKey(), map);
                     });
+        });
 
-            mmap.entrySet().forEach(m -> {
-                try {
-                    write(m.getValue());
-                } catch (IOException | TemplateException ex) {
-                }
-            });
+        mmap.entrySet().forEach(m -> {
+            try {
+                write(m.getValue());
+            } catch (IOException | TemplateException ex) {
+                System.err.println(ex.getMessage());
+            }
         });
 
         return true;
