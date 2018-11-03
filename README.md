@@ -9,7 +9,7 @@ Clone este repositório para sua máquina local com `git clone https://github.co
     
 ## Uso
 
-Para criar classes de repositório para os modelos é necessário adicionar a anotação `@GenerateRepository` e para as classes de controle adicionar a anotação `@GenerateController`. O projeto também permite criar consultas nas classes de controle para os campos das classe de modelo adicionando a anotação `@MappedProperty`.
+Para criar classes de repositório para os modelos é necessário adicionar a anotação `@GenerateRepository` e para as classes de controle adicionar a anotação `@GenerateController`. O projeto também permite criar consultas nas classes de controle para os campos das classe de modelo adicionando a anotação `@MappedProperty`. Para cada campo anotado com `@MappedProperty`, um método getBy será criado na classe Controller.
 
 ```java
 package br.com.jadler.models;
@@ -37,6 +37,8 @@ public class Persons {
 
 }
 ```
+
+As anotações acima irão gerar duas novas classes PersonsController e RepositoryController. Os pacotes em que as classes serão criadas irão usar como base o mesmo pacote to modelo, alterando apenas o último nome para controller e repository respectivamente.
 
 #### PersonsController
 
