@@ -1,0 +1,33 @@
+#+TITLE:	B2W Challenge (processor)
+#+AUTHOR:	Jaguaraquem A. Reinaldo
+#+EMAIL:	jaguar.adler@gmail.com
+#+DATE:		2020-03-04
+
+* Descrição
+Este projeto é resultado da separação do projeto [[https://github.com/jadler/processor.git][processor]], o outro projeto resultante desta separação encontra-se em [[https://github.com/jadler/b2w-annotation.git][b2w-annotation]].
+Este é o projeto responsável por processar as classes de modelos anotadas com =@GenerateController= em um projeto spring.
+
+* Uso
+Diferentemente dos demais projetos em que o processor e as anotações são distribuídas em um mesmo projeto, este é distribuído em projetos separados, para evitar que código desnecessário seja incluído no projeto final do desenvolvedor. Então para que o processamento das anotações seja realizado de maneira correta é necessário fazer algumas configurações no arquivo pom.xml;
+
+#+begin_src xml
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <annotationProcessorPath>
+              <groupId>br.com.jadler</groupId>
+              <artifactId>b2w-processor</artifactId>
+              <version>2.0.0</version>
+            </annotationProcessorPath>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+      ...
+    </plugins>
+  </build>
+#+end_src
