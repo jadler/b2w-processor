@@ -94,22 +94,33 @@ public class ${outClass} {
     @ApiOperation("Retrieve a ${"${inClass}"?lower_case} given its ${element.getSimpleName()}")
     @GetMapping(value = {"/${element.getSimpleName()}/{${element.getSimpleName()}}"})
     public ResponseEntity<${inClass}> getBy${"${element.getSimpleName()}"?capitalize}(@PathVariable("${element.getSimpleName()}") ${element.asType()} value) {
-        ${inClass} c = new ${inClass}();
-        c.set${"${element.getSimpleName()}"?capitalize}(value);
-        
-        GenericPropertyMatcher property;
-        property = GenericPropertyMatcher.of(StringMatcher.EXACT);
 
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withIgnoreCase()
-                .withMatcher("${element.getSimpleName()}", property);
+        ResponseEntity response = new ResponseEntity("${inClass} with ${element.getSimpleName()} '" + value + "' not found.", HttpStatus.NOT_FOUND);
 
-        Optional<${inClass}> element = repository.findOne(Example.of(c, matcher));
-        if (element.isPresent()) {
-            return ResponseEntity.ok(element.get());
+        try {
+            ${inClass} c = new ${inClass}();
+
+            Method method = c.getClass().getDeclaredMethod("set${"${element.getSimpleName()}"?capitalize}", String.class);
+            method.setAccessible(true);
+            method.invoke(c, value);
+
+            GenericPropertyMatcher property;
+            property = GenericPropertyMatcher.of(StringMatcher.EXACT);
+
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                    .withIgnoreCase()
+                    .withMatcher("${element.getSimpleName()}", property);
+
+            Optional<${inClass}> element = service.findOne(Example.of(c, matcher));
+            if (element.isPresent()) {
+                response = ResponseEntity.ok(element.get());
+            }
+
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LoggerFactory.getLogger(this.getClass()).error(ex.getLocalizedMessage());
         }
-        
-        return new ResponseEntity("${inClass} with ${element.getSimpleName()} " + value + " not found.", HttpStatus.NOT_FOUND);
+
+        return response;
     }
 
 </#list>
