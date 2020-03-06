@@ -3,6 +3,7 @@ package ${package};
 
 </#if>
 import ${import};
+import br.com.jadler.service.PlanetsService;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import java.util.Collection;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +32,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class ${outClass} {
 
     @Autowired
-    protected MongoRepository<${inClass}, String> repository;
+    protected ${inClass}Service service;
 
     @ApiOperation("Retrieve all ${"${inClass}"?lower_case}")
     @GetMapping({"", "/"})
