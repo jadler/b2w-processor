@@ -5,7 +5,7 @@
 
 * Descrição
 Este projeto é resultado da separação do projeto [[https://github.com/jadler/processor.git][processor]], o outro projeto resultante desta separação encontra-se em [[https://github.com/jadler/b2w-annotation.git][b2w-annotation]].
-Este é o projeto responsável por processar as classes de modelos anotadas com =@GenerateRepository= e =@GenerateController= em um projeto spring.
+Este é o projeto responsável por processar as classes de modelos anotadas com =@GenerateController= em um projeto spring.
 
 * Uso
 Diferentemente dos demais projetos em que o processor e as anotações são distribuídas em um mesmo projeto, este é distribuído em projetos separados, para evitar que código desnecessário seja incluído no projeto final do desenvolvedor. Então para que o processamento das anotações seja realizado de maneira correta é necessário fazer algumas configurações no arquivo pom.xml;
@@ -21,7 +21,7 @@ Diferentemente dos demais projetos em que o processor e as anotações são dist
           <annotationProcessorPaths>
             <annotationProcessorPath>
               <groupId>br.com.jadler</groupId>
-              <artifactId>processor</artifactId>
+              <artifactId>b2w-processor</artifactId>
               <version>2.0.0</version>
             </annotationProcessorPath>
           </annotationProcessorPaths>
